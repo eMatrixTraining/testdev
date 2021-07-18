@@ -36,6 +36,8 @@ namespace TestDev
 
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            
             services.AddTransient<ApplicationDbSeeder>();
 
             services.AddEntityFrameworkSqlServer();
@@ -66,6 +68,8 @@ namespace TestDev
             {
                 options.AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
             });
+            
+            
             
 
         }
