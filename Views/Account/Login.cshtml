@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using TestDev.Data.Entities
+
+@model LoginViewModel;
+
+@{
+    Layout = "_LoginLayout";
+}
+
+<section class="flexbox-container" style="height: 60vh">
+    <div class="col-12 d-flex align-items-center justify-content-center">
+        <div class="col-lg-4 col-md-6 col-10">
+            <div id="login-panel" class="card px-1 py-1 m-0 border-0" style="background: transparent; box-shadow: unset">
+                <div class="card-header border-0" style="padding: 1.5rem 1.5rem 0; background: transparent">
+                    <div class="font-large-1 text-center">
+
+                        <a href="https://ematrixtraining.com.au" target="_blank">
+                            <img class="brand-logo" alt="" src="/assets/images/ematrix-w-logo.png" style="height: 55px">
+                        </a>
+                        <div style="font-size: 18pt; font-weight: 900; color: #6967ce !important; position: relative; bottom: 8px">The Learning Portal</div>
+
+                    </div>
+                </div>
+                <div class="card-content">
+
+                    <div class="card-body" style="padding-bottom: 0 !important; padding-top: 25px;">
+                        @Html.ValidationSummary(true, "", new { @class = "login alert alert-danger" })
+                        
+                        <form class="form-horizontal app-login" asp-controller="Account" asp-action="Login" novalidate method="post">
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Email" class="form-control round" required="" id="user-name" placeholder="Username" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <div class="form-control-position">
+                                    <i class="ft-user"></i>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Password" class="form-control round" type="password" id="user-password" required="" placeholder="Password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                                <div class="form-control-position">
+                                    <i class="ft-lock"></i>
+                                </div>
+                            </fieldset>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn round btn-block btn-glow btn-bg-gradient-x-purple-blue col-12 mr-1 mb-1">Login</button>
+                            </div>
+
+                        </form>
+                        <div class="text-center mb-1">
+
+                            <div style="padding: 5px; margin-top: 20px; text-align: center; ">
+                                <a href="https://ematrixtraining.com.au" target="_blank" rel=”noopener noreferrer”>
+                                    <div style="font-size: 12px">Copyright &copy; 2020 <a style="color: #FECC00" href="https://ematrixtraining.com.au" target="_blank">eMatrix</a></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/assets/js/login.js" type="text/javascript" defer="true" asp-append-version="true"></script>

@@ -20,14 +20,15 @@ namespace TestDev.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        public IActionResult Privacy()
+        public IActionResult Main()
         {
-            return View();
+            var model = new MainViewModel();
+            return View(model);
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
