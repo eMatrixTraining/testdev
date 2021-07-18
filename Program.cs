@@ -1,11 +1,7 @@
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
+using Serilog.Events;
 
 namespace TestDev
 {
@@ -13,14 +9,27 @@ namespace TestDev
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateAppLogger();
+            BuildWebHost(args).Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+         private static void CreateAppLogger()
+        {
+            var config = new LoggerConfiguration();
+            config.MinimumLevel.Debug();
+            config.MinimumLevel.Override("Microsoft", LogEventLevel.Information);
+            config.Enrich.FromLogContext();
+            config.WriteTo.File("wwwroot/App_Data/Logs/log.txt", rollingInterval: RollingInterval.Day, fileSizeLimitBytes: 300000000);
+
+            Log.Logger = config.CreateLogger();
+            Log.Information("Test Dev Started!");
+
+        }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .UseStartup<Startup>()
+            .Build();
     }
 }
