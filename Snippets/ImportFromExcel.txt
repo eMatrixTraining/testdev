@@ -1,0 +1,63 @@
+This snippet shows 2 methods that loads an Excel spreadsheet and then extracting the required data to create a user.
+
+public class ExcelImportModel
+{
+    public IFormFile ExcelFile { get; set; }
+}
+
+public async Task<IActionResult> ImportFromExcel(ExcelImportModel model)
+{
+    // The upload Excel file is loaded into memory stream
+    if (model.ExcelFile != null)
+    {
+        using (var uploadedFileMemoryStream = new MemoryStream())
+        {
+            await model.ExcelFile.CopyToAsync(uploadedFileMemoryStream);
+
+            if (await CreateUsersFromImport(uploadedFileMemoryStream))
+            {
+                return RedirectToAction("Users", "Admin", new { st = "1" });
+            }
+        }
+    }
+
+    //Failed to import
+    return RedirectToAction("Users", "Admin", new { st = "0" });
+}
+
+
+private async Task<bool> CreateUsersFromImport(MemoryStream uploadedStream)
+{
+    // The uploaded memory stream that contains the Excel spreadsheet is then
+    // initialized as an ExcelPackage
+    using (var package = new ExcelPackage(uploadedStream))
+    {
+        var worksheet = package.Workbook.Worksheets[1];
+        var rowCount = worksheet.Dimension?.Rows;
+        var colCount = worksheet.Dimension?.Columns;
+
+        if (rowCount.HasValue && colCount.HasValue)
+        {
+            for (int i = 1; i <= rowCount.Value; i++)
+            {
+                var newUser = new SomeUserModel
+                {
+                    //Extracts the first, second and third column of the Excel spreadsheet
+                    FirstName = worksheet.Cells[i, 1].Value.ToString(),
+                    LastName = worksheet.Cells[i, 2].Value.ToString(),
+                    Email = worksheet.Cells[i, 3].Value.ToString(),
+                    Password = DEFAULT_PASSWORD,
+                    IsAdmin = false,
+                    IsRoot = false,
+                    ConfirmToken = GenerateConfirmToken()
+                };
+
+                await CreateUser(newUser);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
