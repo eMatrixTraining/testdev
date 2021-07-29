@@ -87,10 +87,8 @@ namespace TestDev
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            if (!env.IsProduction())
-            {
-               dbSeeder.EnsureSeed().GetAwaiter().GetResult();
-            }
+            //Execute ApplicationDbSeeder to seed/pre-populate database
+            dbSeeder.EnsureSeed().GetAwaiter().GetResult();
 
             RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions
             {

@@ -12,8 +12,15 @@ namespace TestDev.Data
         {
         }
 
-        
+
         internal DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        
+        internal DbSet<Series> Series { get; set; }
+        internal DbSet<Module> Modules { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+        }
     }
 }
